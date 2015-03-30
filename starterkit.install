@@ -415,7 +415,7 @@ function starterkit_install_finished(&$install_state) {
     ->execute();
 
   $starterkit_themes= array('omega','adminimal_theme');
-  theme_enable($starterkit_themes);
+  install_enable_theme($starterkit_themes);
   //set default theme info
   db_update('system')
     ->fields(array('status' => 1))
