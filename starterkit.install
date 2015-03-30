@@ -342,18 +342,23 @@ function starterkit_install() {
     'access content',
     'view own unpublished content',
     'edit any news content',
-    'edit any page content'
+    'edit any page content',
+    'moderate content from draft to needs_review',
+    'moderate content from needs_review to draft',
   );
   $owner_perms = array(
+    'access administration menu',
     'access content',
     'administer beans',
     'access bean overview',
     'view own unpublished content',
-    'view content revisions'
+    'view content revisions',
     'edit any news content',
     'delete any news content',
     'edit any page content',
     'delete any page content',
+    'moderate content from needs_review to draft',
+    'moderate content from needs_review to published',
   );
 
   user_role_grant_permissions($contrib_id, $contrib_perms);
@@ -365,6 +370,7 @@ function starterkit_install() {
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
 
+  drupal_flush_all_caches();
 }
 
 
@@ -408,7 +414,7 @@ function starterkit_install_finished(&$install_state) {
     ->condition('name', 'bartik')
     ->execute();
 
-  $starterkit_themes= array('omega');
+  $starterkit_themes= array('omega','adminimal_theme');
   theme_enable($starterkit_themes);
   //set default theme info
   db_update('system')
@@ -416,9 +422,9 @@ function starterkit_install_finished(&$install_state) {
     ->condition('type', 'theme')
     ->condition('name', 'omega')
     ->execute();
-  variable_set('admin_theme', 'seven');
+  variable_set('admin_theme', 'adminimal_theme');
   variable_set('theme_default', 'omega');
-  variable_set('node_admin_theme', FALSE);
+  variable_set('node_admin_theme', 1);
 
 /*
   if (drupal_write_record('block_custom', $footer_block_text)) {

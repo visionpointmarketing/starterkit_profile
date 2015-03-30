@@ -62,5 +62,6 @@ dependencies[] = views
 dependencies[] = views_ui
 dependencies[] = workbench
 dependencies[] = workbench_access
+dependencies[] = workbench_email
 dependencies[] = workbench_moderation
 dependencies[] = wysiwyg
