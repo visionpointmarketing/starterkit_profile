@@ -5,9 +5,115 @@
  * Perform actions to set up the site for this profile.
  */
 function starterkit_install() {
-  include_once DRUPAL_ROOT . '/profiles/minimal/minimal.install';
-  minimal_install();
+  // Do not use the administration theme when editing or creating content.
+  variable_set('node_admin_theme', '0');
   
+  // Create page type.
+
+  // Insert default pre-defined node types into the database. For a complete
+  // list of available node type attributes, refer to the node type API
+  // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
+
+  $types = array(
+    array(
+      'type' => 'page',
+      'name' => st('Basic page'),
+      'base' => 'node_content',
+      'description' => st("Use <em>basic pages</em> for your static content, such as an 'About us' page."),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+  );
+
+  foreach ($types as $type) {
+    $type = node_type_set_defaults($type);
+    node_type_save($type);
+    node_add_body_field($type);
+  }
+
+  // Create a default role for site administrators, with all available permissions assigned.
+  $admin_role = new stdClass();
+  $admin_role->name = 'administrator';
+  $admin_role->weight = 2;
+  user_role_save($admin_role);
+  user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
+  // Set this as the administrator role.
+  variable_set('user_admin_role', $admin_role->rid);
+
+  // Assign user 1 the "administrator" role.
+  db_insert('users_roles')
+    ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
+    ->execute();
+
+  // Default page to not be promoted and have comments disabled.
+  variable_set('node_options_page', array('status'));
+  variable_set('comment_page', COMMENT_NODE_HIDDEN);
+
+  // Don't display date and author information for page nodes by default.
+  $theme_settings = variable_get('theme_settings', array());
+  $theme_settings['toggle_node_info_page'] = FALSE;
+  variable_set('theme_settings', $theme_settings);
+
+  features_revert($revert);
+
+  node_access_rebuild(FALSE);
+
+  // The installer requires that the system theme settings form
+  // be submitted in order for its themes' settings to be properly set
+  // For more background, see http://drupal.org/node/1776730.
+  module_load_include('inc', 'system', 'system.admin');
+  foreach ($cod_themes as $theme_name) {
+    $form_state = form_state_defaults();
+    $form_state['build_info']['args'][0] = $theme_name;
+    $form_state['values'] = array();
+    drupal_form_submit('system_theme_settings', $form_state);
+  }
+}
+
+
+
+
+
+/**
+ * Override of install_finished() without the useless text.
+ */
+function starterkit_install_finished(&$install_state) {
+
+  // Remember the profile which was used.
+  variable_set('install_profile', drupal_get_profile());
+  variable_set('install_task', 'done');
+
+  // BEGIN copy/paste from install_finished().
+  // Remove the bookmarks flag
+  $flag = flag_get_flag('bookmarks');
+  if($flag) {
+    $flag->delete();
+    $flag->disable();
+    _flag_clear_cache();
+  }
+
+  variable_set('clean_url', 1);
+
+  // Enable default settings for jquery_update
+  variable_set('jquery_update_compression_type', 'min');
+  variable_set('jquery_update_jquery_admin_version', '1.7');
+  variable_set('jquery_update_jquery_version', '1.8');
+
+  // Flush all caches to ensure that any full bootstraps during the installer
+  // do not leave stale cached data, and that any content types or other items
+  // registered by the installation profile are registered correctly.
+  drupal_flush_all_caches();
+
+  // The Bartik theme is automatically enabled during installation. Disable it.
+  db_update('system')
+    ->fields(array('status' => 0))
+    ->condition('type', 'theme')
+    ->condition('name', 'bartik')
+    ->execute();
+
+  $cod_themes= array('omega');
+  theme_enable($cod_themes);
   //set default theme info
   db_update('system')
     ->fields(array('status' => 1))
@@ -16,6 +122,46 @@ function starterkit_install() {
     ->execute();
   variable_set('admin_theme', 'seven');
   variable_set('theme_default', 'omega');
-}
+  variable_set('node_admin_theme', FALSE);
 
+/*
+  if (drupal_write_record('block_custom', $footer_block_text)) {
+    $footer_block = array(
+      'module' => 'block',
+      'delta' => $footer_block_text['bid'],
+      'theme' => 'pisces',
+      'visibility' => 0,
+      'region' => 'footer',
+      'status' => 1,
+      'pages' => 0,
+      'weight' => 1,
+      'title' => variable_get('site_name', 'Conference Organizing Distribution'),
+    );
+    drupal_write_record('block', $footer_block);
+  }
+*/
+
+  if (isset($messages['error'])) {
+    $output = '<p>' . (isset($messages['error']) ? st('Review the messages above before visiting <a href="@url">your new site</a>.', array('@url' => url(''))) : st('<a href="@url">Visit your new site</a>.', array('@url' => url('')))) . '</p>';
+    return $output;
+  }
+  else {
+    // Since any module can add a drupal_set_message, this can bug the user
+    // when we redirect him to the front page. For a better user experience,
+    // remove all the message that are only "notifications" message.
+    drupal_get_messages('status', TRUE);
+    drupal_get_messages('completed', TRUE);
+
+    // If we don't install drupal using Drush, redirect the user to the front
+    // page.
+    if (!drupal_is_cli()) {
+      drupal_goto('');
+    }
+  }
+}
+function starterkit_admin_permissions() {
+  //get the administrator role, we set this in the install file
+  $admin_role = user_role_load_by_name('administrator');
+  user_role_grant_permissions($admin_role->rid, array_keys(module_invoke_all('permission')));
+}
 ?>
