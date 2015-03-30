@@ -313,19 +313,19 @@ function starterkit_install() {
   $contrib_role->name = 'content contributor';
   $contrib_role->weight = 3;
   user_role_save($contrib_role);
-  $contrib_id = $contrib_role->rid
+  $contrib_id = $contrib_role->rid;
 
   $editor_role = new stdClass();
   $editor_role->name = 'content editor';
   $editor_role->weight = 4;
   user_role_save($editor_role);
-  $editor_id = $editor_role->rid
+  $editor_id = $editor_role->rid;
 
   $owner_role = new stdClass();
   $owner_role->name = 'content owner';
   $owner_role->weight = 5;
   user_role_save($owner_role);
-  $owner_id = $owner_role->rid
+  $owner_id = $owner_role->rid;
 
   $contrib_perms = array(
     'access content',
