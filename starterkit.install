@@ -328,13 +328,32 @@ function starterkit_install() {
   $owner_id = $owner_role->rid;
 
   $contrib_perms = array(
+    'access administration menu',
     'access content',
+    'view own unpublished content',
+    'create news content',
+    'edit own news content',
+    'create page content',
+    'edit own page content',
+
   );
   $editor_perms = array(
+    'access administration menu',
     'access content',
+    'view own unpublished content',
+    'edit any news content',
+    'edit any page content'
   );
   $owner_perms = array(
     'access content',
+    'administer beans',
+    'access bean overview',
+    'view own unpublished content',
+    'view content revisions'
+    'edit any news content',
+    'delete any news content',
+    'edit any page content',
+    'delete any page content',
   );
 
   user_role_grant_permissions($contrib_id, $contrib_perms);
