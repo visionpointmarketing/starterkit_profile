@@ -24,6 +24,15 @@ function starterkit_install() {
       'modified' => 1,
       'locked' => 0,
     ),
+    array(
+      'type' => 'test',
+      'name' => st('Test Type'),
+      'base' => 'node_content',
+      'description' => st("Testing"),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
   );
 
   foreach ($types as $type) {
