@@ -375,8 +375,8 @@ function starterkit_install() {
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
   $string  = "Welcome to the VisionPoint Drupal Starterkit.</br>";
-  $string  = "You'll want to start by <a href='admin/config/workbench/access/settings' target='_blank'>setting up workbench</a>, you're probably getting an error or warning message about it.</br>";
-  $string .= "We've installed and enabled a handful of <a href='admin/modules' target='_blank'>modules</a>, as well as provided an <a href='admin/appearance/settings/starterkit' target='_blank'>Omega 4 Subtheme</a> with pre-styled layouts.</br>";
+  $string  = "You'll want to start by <a href='/admin/config/workbench/access/settings' target='_blank'>setting up workbench</a>, you're probably getting an error or warning message about it.</br>";
+  $string .= "We've installed and enabled a handful of <a href='/admin/modules' target='_blank'>modules</a>, as well as provided an <a href='/admin/appearance/settings/starterkit' target='_blank'>Omega 4 Subtheme</a> with pre-styled layouts.</br>";
   $string .= "You'll eventually want to delete this sample content and set up Your homepage content per the IA and design requirements.</br>";
   //create first node
   $date = new DateTime();
@@ -400,6 +400,31 @@ function starterkit_install() {
       'summary' => '',
       'format' => 'filtered_html',
       'safe_value' => 'Body text test'
+  );
+  node_save($node);
+  //create sitemap node
+  $date = new DateTime();
+  $node = new stdClass();
+  $node->type = 'page';
+  $node->status = 1;
+  $node->uid = 1;
+  $node->title = 'sitemap';
+  $node->promote = 1;
+  $node->created = $date->getTimestamp();
+  $node->timestamp = $date->getTimestamp();
+  $node->sticky = 0;
+  $node->format = 3;
+  $node->language = LANGUAGE_NONE;
+  $node->teaser = '';
+  $node->revision = 0;
+  $node->path['alias'] = '/sitemap';
+  node_object_prepare($node);
+  $node->intro[$node->language][0]['value'] = '';
+  $node->body[$node->language][0] = array(
+      'value' => '',
+      'summary' => '',
+      'format' => 'filtered_html',
+      'safe_value' => ''
   );
   node_save($node);
 
