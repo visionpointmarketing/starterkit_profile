@@ -400,6 +400,9 @@ function starterkit_install() {
   );
   node_save($node);
 
+  variable_set('site_frontpage','node/1');
+  variable_set('node_admin_theme', 1);
+
   node_access_rebuild();
 
   drupal_flush_all_caches();
