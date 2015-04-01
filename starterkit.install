@@ -374,7 +374,9 @@ function starterkit_install() {
   db_insert('users_roles')
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
-
+  $string  = "<p>Welcome to the VisionPoint Drupal Starterkit.</p>";
+  $string .= "<p>We've installed and enabled a handful of <a href='admin/modules' target='_blank'>modules</a>, as well as provided an <a href='admin/appearance/settings/starterkit' target='_blank'>Omega 4 Subtheme</a> with pre-styled layouts.</p>";
+  $string .= "<p>You'll eventually want to delete this sample content and set up Your homepage content per the IA and design requirements.</p>";
   //create first node
   $date = new DateTime();
   $node = new stdClass();
@@ -393,7 +395,7 @@ function starterkit_install() {
   node_object_prepare($node);
   $node->intro[$node->language][0]['value'] = 'introtext index';
   $node->body[$node->language][0] = array(
-      'value' => 'Test',
+      'value' => $string,
       'summary' => '',
       'format' => 'filtered_html',
       'safe_value' => 'Body text test'
