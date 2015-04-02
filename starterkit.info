@@ -44,6 +44,7 @@ dependencies[] = date_views
 dependencies[] = entity
 dependencies[] = entityreference
 dependencies[] = features
+dependencies[] = fe_block
 dependencies[] = feeds
 dependencies[] = feeds_ui
 dependencies[] = fontawesome
@@ -56,6 +57,7 @@ dependencies[] = menu_block
 dependencies[] = owlcarousel
 dependencies[] = pathauto
 dependencies[] = quicktabs
+dependencies[] = strongarm
 dependencies[] = token
 dependencies[] = uuid
 dependencies[] = uuid_features
@@ -69,4 +71,7 @@ dependencies[] = workbench_email
 dependencies[] = workbench_moderation
 dependencies[] = wysiwyg
 
+;when enabling the feature, the following warning occurs:
+;	SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry 'adminimal-user-login' for key 'tmd'
 ;dependencies[] = ia_theme_information
+;dependencies[] = global_settings
