@@ -68,3 +68,5 @@ dependencies[] = workbench_access
 dependencies[] = workbench_email
 dependencies[] = workbench_moderation
 dependencies[] = wysiwyg
+
+dependencies[] = ia_theme_information
