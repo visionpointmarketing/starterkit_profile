@@ -386,8 +386,9 @@ function starterkit_install() {
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
   $string  = "Welcome to the VisionPoint Drupal Starterkit.</br>";
-  $string  = "You'll want to start by <a href='/admin/config/workbench/access/settings' target='_blank'>setting up workbench</a>, you're probably getting an error or warning message about it.</br>";
-  $string .= "We've installed and enabled a handful of <a href='/admin/modules' target='_blank'>modules</a>, as well as provided an <a href='/admin/appearance/settings/starterkit' target='_blank'>Omega 4 Subtheme</a> with pre-styled layouts.</br>";
+  $string  = "You'll want to start by enabling any features you'll need on the <a href='/admin/modules' target='_blank'>Modules</a> page. We can't enable those for you or we'll get some errors</br>";
+  $string = "Also, you'll want to <a href='/admin/config/workbench/access/settings' target='_blank'>set up workbench</a>, as you're probably getting an error or warning message about it.</br>";
+  $string .= "We've provided an <a href='/admin/appearance/settings/starterkit' target='_blank'>Omega 4 Subtheme</a> with pre-styled layouts.</br>";
   $string .= "You'll eventually want to delete this sample content and set up Your homepage content per the IA and design requirements.</br>";
   //create first node
   $date = new DateTime();
