@@ -137,7 +137,18 @@ function starterkit_install() {
     node_type_save($type);
     node_add_body_field($type);
   }
-
+  //set pathauto patterns for newly created content types
+  variable_set('pathauto_node_pattern', '[node:title]');
+  variable_set('pathauto_node_page_pattern', '[node:title]');
+  variable_set('pathauto_node_news_pattern', 'news/[node:title]');
+/*
+    // Set some default variables necessary for the module to perform.
+  variable_set('pathauto_node_pattern', 'content/[node:title]');
+  variable_set('pathauto_taxonomy_term_pattern', '[term:vocabulary]/[term:name]');
+  variable_set('pathauto_forum_pattern', '[term:vocabulary]/[term:name]');
+  variable_set('pathauto_user_pattern', 'users/[user:name]');
+  variable_set('pathauto_blog_pattern', 'blogs/[user:name]');
+*/
   // Insert default pre-defined RDF mapping into the database.
   $rdf_mappings = array(
     array(
@@ -417,7 +428,7 @@ function starterkit_install() {
   $node->language = LANGUAGE_NONE;
   $node->teaser = '';
   $node->revision = 0;
-  $node->path['alias'] = '/sitemap';
+  $node->path['alias'] = 'sitemap';
   node_object_prepare($node);
   $node->intro[$node->language][0]['value'] = '';
   $node->body[$node->language][0] = array(
@@ -431,18 +442,40 @@ function starterkit_install() {
   variable_set('site_frontpage','node/1');
   variable_set('node_admin_theme', 1);
 
-  node_access_rebuild();
 
-  drupal_flush_all_caches();
-}
+/*
+$sitemap_config = array(
+  'menu_name' => 'main-menu',
+  'title_link' => 0,
+  'admin_title' => '',
+  'level' => 1,
+  'follow' => 0,
+  'depth' => 0,
+  'expanded' => 1,
+  'sort' => 0,
+);
+$sitemap_tree = menu_tree_build($sitemap_config);
+$main_menu_block = array(
+  'module' => 'menu_block',
+  'content' => $sitemap_tree,
+  'delta' => $footer_block_text['bid'],
+  'theme' => 'starterkit',
+  'visibility' => 0,
+  'region' => 'header_third',
+  'status' => 1,
+  'pages' => 0,
+  'weight' => 1,
+  'title' => variable_get('site_name', 'Starterkit'),
+);
+drupal_write_record('block', $main_menu_block);
+*/
+
 
 
   // Enable default settings for jquery_update
 /*  variable_set('jquery_update_compression_type', 'min');
   variable_set('jquery_update_jquery_admin_version', '1.7');
   variable_set('jquery_update_jquery_version', '1.8');*/
-
-
 
 /*
   if (drupal_write_record('block_custom', $footer_block_text)) {
@@ -460,4 +493,8 @@ function starterkit_install() {
     drupal_write_record('block', $footer_block);
   }
 */
+  node_access_rebuild();
+
+  drupal_flush_all_caches();
+}
 ?>
