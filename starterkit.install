@@ -309,6 +309,57 @@ function starterkit_install() {
     ),
   );
   field_create_instance($instance);
+/**/
+  $field = array(
+    'field_name' => 'field_date',
+    'type' => 'date',
+    'cardinality' => 1,
+    'locked' => FALSE,
+  );
+  field_create_field($field);
+  $instance = array(
+    'field_name' => 'field_date',
+    'entity_type' => 'node',
+    'label' => 'Date',
+    'bundle' => 'News',
+    'description' => st('Enter the date associated with this news article.'),
+    'required' => FALSE,
+    'settings' => array(
+      'input_format' => date_default_format('date_select'),
+      'increment' => 1,
+      'year_range' => '-3:+3',
+    ),
+    'behaviors' => array(
+      'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+      'default value' => FIELD_BEHAVIOR_CUSTOM,
+    ),
+  );
+  field_create_instance($instance);
+
+  $field = array(
+    'field_name' => 'field_author',
+    'type' => 'text',
+    'cardinality' => 1,
+    'locked' => FALSE,
+    'settings' => array(
+      'max_length' => 30,
+    ),
+  );
+  field_create_field($field);
+  $instance = array(
+    'field_name' => 'field_author',
+    'entity_type' => 'node',
+    'label' => 'Author',
+    'bundle' => 'News',
+    'description' => st('Enter the author of this news article.'),
+    'required' => FALSE,
+    'widget'      => array(
+      'type'       => 'text_textfield',
+      'settings'   => array('size' => 60),
+    ),
+  );
+  field_create_instance($instance);
+/**/
 
   // Enable default permissions for system roles.
   $filtered_html_permission = filter_permission_name($filtered_html_format);
