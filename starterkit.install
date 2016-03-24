@@ -103,13 +103,88 @@ function starterkit_install() {
     $query->values($block);
   }
   $query->execute();
+/**
+   * General stuff.
+   */
+  /**
+   * Configure CKEditor and WYSIWYG.
+   */
 
+  // Create configuration for CKEditor.
+  $ckeditor_configuration = serialize(array(
+  'default' => 1,
+  'user_choose' => 0,
+  'show_toggle' => 1,
+  'theme' => 'advanced',
+  'language' => 'en',
+  'buttons' => array(
+    'default' => array(
+      'Bold' => 1,
+      'Italic' => 1,
+      'BulletedList' => 1,
+      'NumberedList' => 1,
+      'Outdent' => 1,
+      'Indent' => 1,
+      'Undo' => 1,
+      'Redo' => 1,
+      'Link' => 1,
+      'Unlink' => 1,
+      'Blockquote' => 1,
+      'Cut' => 1,
+      'Copy' => 1,
+      'Paste' => 1,
+      'PasteText' => 1,
+      'PasteFromWord' => 1,
+      'Format' => 1,
+      'SelectAll' => 1,
+      ),
+    ),
+  'toolbar_loc' => 'top',
+  'toolbar_align' => 'left',
+  'path_loc' => 'bottom',
+  'resizing' => 1,
+  'verify_html' => 1,
+  'preformatted' => 0,
+  'convert_fonts_to_spans' => 1,
+  'remove_linebreaks' => 1,
+  'apply_source_formatting' => 1,
+  'paste_auto_cleanup_on_paste' => 1,
+  'block_formats' => 'p','address','pre','h2','h3','h4','h5','h6',
+  'css_setting' => 'theme',
+  'css_path' => '',
+  'css_classes' => ''
+  ));
 
+  // Add CKEditor to wysiwyg
+  $query = db_insert('wysiwyg')
+    ->fields(array(
+      'format' => 'filtered_html',
+      'editor' => 'ckeditor',
+      'settings' => $ckeditor_configuration,
+    ));
+  $query->execute();
+
+  // Set errors only to go to the log.
+  variable_set('error_level', 0);
+
+  // Create Bean types.
+    $bean = bean_create(array('type' => 'billboard'));
+    $bean->label = 'Billboard';
+    $bean->title = 'Billboard';
+    $bean->delta = 'billboard';
+    $bean->field_block_content = array(
+      'en' => array(array(
+        'value' => '<p>Text</p>',
+        'format' => 'wysiwyg_editor',
+      )),
+    );
+    $bean->save();
   // Create page types.
 
   // Insert default pre-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
   // documentation at: http://api.drupal.org/api/HEAD/function/hook_node_info.
+
 
   $types = array(
     array(
@@ -437,8 +512,8 @@ function starterkit_install() {
     ->fields(array('uid' => 1, 'rid' => $admin_role->rid))
     ->execute();
   $string  = "Welcome to the VisionPoint Drupal Starterkit.</br>";
-  $string  = "You'll want to start by enabling any features you'll need on the <a href='/admin/modules' target='_blank'>Modules</a> page. We can't enable those for you or we'll get some errors</br>";
-  $string = "Also, you'll want to <a href='/admin/config/workbench/access/settings' target='_blank'>set up workbench</a>, as you're probably getting an error or warning message about it.</br>";
+  $string  .= "You'll want to start by enabling any features you'll need on the <a href='/admin/modules' target='_blank'>Modules</a> page. We can't enable those for you or we'll get some errors</br>";
+  $string .= "Also, you'll want to <a href='/admin/config/workbench/access/settings' target='_blank'>set up workbench</a>, as you're probably getting an error or warning message about it.</br>";
   $string .= "We've provided an <a href='/admin/appearance/settings/starterkit' target='_blank'>Omega 4 Subtheme</a> with pre-styled layouts.</br>";
   $string .= "You'll eventually want to delete this sample content and set up Your homepage content per the IA and design requirements.</br>";
   //create first node
